@@ -8,41 +8,60 @@ def index():
     total = None
     average = None
     grade = None
+    error = None
 
     if request.method == "POST":
-        try:
-            # Get marks (3 to 5 subjects)
-            marks = []
+        marks = []
 
-            for i in range(1, 6):
-                value = request.form.get(f"sub{i}")
-                if value:
-                    marks.append(float(value))
+        # Collect marks from form (sub1 to sub5)
+        for i in range(1, 6):
+            value = request.form.get(f"sub{i}")
 
-            if len(marks) >= 3:
-                total = sum(marks)
-                average = total / len(marks)
+            if value:  # only if user entered something
+                try:
+                    mark = float(value)
 
-                # Grade calculation
-                if average >= 90:
-                    grade = "A+"
-                elif average >= 80:
-                    grade = "A"
-                elif average >= 70:
-                    grade = "B"
-                elif average >= 60:
-                    grade = "C"
-                elif average >= 50:
-                    grade = "D"
-                else:
-                    grade = "F"
-            else:
-                grade = "Enter at least 3 subjects"
+                    # Validate range
+                    if 0 <= mark <= 100:
+                        marks.append(mark)
+                    else:
+                        error = "Marks must be between 0 and 100"
+                        return render_template("index.html", error=error)
 
-        except:
-            grade = "Invalid input"
+                except ValueError:
+                    error = "Please enter valid numeric values"
+                    return render_template("index.html", error=error)
 
-    return render_template("index.html", total=total, average=average, grade=grade)
+        # Ensure at least 3 subjects
+        if len(marks) < 3:
+            error = "Enter at least 3 subjects"
+            return render_template("index.html", error=error)
+
+        # Calculations
+        total = sum(marks)
+        average = total / len(marks)
+
+        # Grade logic
+        if average >= 90:
+            grade = "A+"
+        elif average >= 80:
+            grade = "A"
+        elif average >= 70:
+            grade = "B"
+        elif average >= 60:
+            grade = "C"
+        elif average >= 50:
+            grade = "D"
+        else:
+            grade = "F"
+
+    return render_template(
+        "index.html",
+        total=total,
+        average=average,
+        grade=grade,
+        error=error
+    )
 
 
 if __name__ == "__main__":
