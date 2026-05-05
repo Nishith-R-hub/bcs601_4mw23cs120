@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Grade Calculator</title>
+</head>
+<body>
+    <h2>Student Grade Calculator</h2>
+
+    <form method="POST">
+        Subject 1: <input type="number" name="sub1"><br><br>
+        Subject 2: <input type="number" name="sub2"><br><br>
+        Subject 3: <input type="number" name="sub3"><br><br>
+        Subject 4: <input type="number" name="sub4"><br><br>
+        Subject 5: <input type="number" name="sub5"><br><br>
+
+        <input type="submit" value="Calculate">
+    </form>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    {% if total is not none %}
+        <h3>Total: {{ total }}</h3>
+        <h3>Average: {{ average }}</h3>
+        <h3>Grade: {{ grade }}</h3>
+    {% endif %}
+</body>
+</html>
